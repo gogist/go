@@ -4,7 +4,46 @@ package unsafe
 
 import (
 	"testing"
+
+	. "gopkg.in/check.v1"
 )
+
+type MySuite struct{}
+
+var _ = Suite(&MySuite{})
+
+// Hook up gocheck into the "go test" runner.
+func Test(t *testing.T) { TestingT(t) }
+
+func (s *MySuite) Test_Suite1(c *C) {
+	var x = []byte("Hello World!")
+	var y = String(x)
+	var z = string(x)
+
+	// c.Check(y, Not(Equals), z)
+	c.Check(y, Equals, z)
+}
+
+func (s *MySuite) Test_Suite2(c *C) {
+	var x = "Hello World!"
+	var y = Bytes(x)
+	var z = []byte(x)
+
+	c.Check(y, DeepEquals, z)
+}
+
+func (s *MySuite) BenchmarkLogic(c *C) {
+	// sa := []interface{}{"q", "w", "e", "r", "t"}
+	// sb := []interface{}{"q", "w", "a", "s", "z", "x"}
+	var x = "Hello World!"
+	c.ResetTimer()
+	for i := 0; i < c.N; i++ {
+		// Logic to benchmark
+		// _ = SliceEqual(sa, sb)
+		// c.Check(sa, Not(DeepEquals), sb)
+		_ = StringByte(x)
+	}
+}
 
 func Test_String(t *testing.T) {
 	var x = []byte("Hello World!")
@@ -84,9 +123,9 @@ func Benchmark_Bytes(b *testing.B) {
 }
 
 func Benchmark_StringByte(b *testing.B) {
-	var x = []byte("Hello World!")
+	var x = "Hello World!"
 	for i := 0; i < b.N; i++ {
-		_ = ByteString(x)
+		_ = StringByte(x)
 	}
 }
 
